@@ -1,0 +1,542 @@
+<!DOCTYPE HTML>
+
+<script>
+    // last update 22/12/2022 -->03/01/2023
+    // content: make function to analyse each rib data
+</script>
+<html>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'kmk/css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'kmk/css/hiep.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'kmk/css/font-awesome.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'kmk/css/font-awesome.min.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'kmk/css/hideshow.css' %}" />
+    <script type="text/javascript" src="{% static 'kmk/js/jquery-3.3.1.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'kmk/js/bootstrap.min.js' %}"></script>
+
+    
+
+    <!---------------------------------------------------------HTML SHOW FRONTEND------------------------------------------------------------------------
+                                            THIS IS FOR MODEL E90, E91, G31 WHICH HAVE 8 RIB DATA
+    ----------------------------------------------------------------------------------------------------------------------------------------------------->
+
+    <head>
+        <title>KMK</title>
+    </head>
+    <style>
+        table, th, td {
+          border-radius: 30px;
+        }
+        th, td {
+            background-color: #96D4D4;
+            }
+        th {
+            text-align: center;
+            height: 50px;
+            font-size: 25px;
+            }
+    </style>
+    
+
+    <body onload = 'hide_LED()'>                    <!--FUNTION 'hide_LED' : hiding led when it's not in 'realtime' mode-->
+
+        <!-----------------------------------------------------------------------TITLE--------------------------------------------------------------------------------------------
+                                                                    FUNTION : SEARCHING, REALTIME GRAPH
+        ------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+        <div class="container-fluid p-3 my-12 bg-dark text-white">
+            <div class="row text-center">
+                <div class="col-md-1"></div>
+                <div class="col-md-10 text-center">
+                    <h1>KMK DATA Analytics</h1>
+                </div>
+                <div class="col-md-1"></div>
+                
+            </div>
+            <button style = "background-color: aqua; color:black; height:50px; width:150px" onclick="hide_show_params()">Search</button>        <!--FUNCTION 'hide_show_params': CLICK >> HIDE >> SHOW PARAMETERS FOR SEARCHING-->
+            
+            <div class= "hidden-div"id = "hidden-div">
+                
+                    <form method="post" id="indexForm" style="align-items: center;" data-Line-url="{% url 'ajax_load_Line' %}" ajax_load_realtime ="{% url 'ajax_load_realtime' %}">
+    
+                        <div class="row">
+                            
+                            <div class="col-md-1"></div>
+                            <div class="col-md-1">
+                                <label>Model</label>
+                                <select name="Model" id="Model" class="form-control">
+                                    <option value="">--select model--</option>
+                                    {% for i in Model %}
+                                        <option value="{{i.Model}}">{{i.Model}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-1">
+                                <label>Line</label>
+                                <select name="Line" id="Line" class="form-control"></select>
+                            </div>
+                            <div class="col-md-1">
+                                <label>rib</label>
+                                <select name="rib_name" id="rib_name" class="form-control">
+                                   
+                                </select>
+                                
+                            </div>
+                            <div class="col-md-1">
+                                <label>From</label>
+                                <div style = 'text-align:center; margin-top: 5px;'>
+                                    <input type = "date" name="date_start" id="date_start">
+                                    {{ example_form.my_date_field  }}
+                        
+                                    <input type = "time" name="time-start" id="time-start">
+                                     {{ example_form.my_time_field  }}
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <label>To</label>
+                                <div style = 'text-align:center; margin-top: 5px;'>
+                                    
+                                    <input type = "date" name="date_end" id="date_end">
+                                    {{ example_form.my_date_field  }}
+                        
+                                    <input type = "time" name="time-end" id="time-end">
+                                     {{ example_form.my_time_field  }}
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <form action="{% url 'KMK' %}" method = 'GET'>
+                                    {% csrf_token %}  
+                                    <br>      
+                                    <button class = 'btn btn-primary' name = "btn_search" id = "btn_search">Start Analyze</button>    
+                                </form> 
+                            </div>
+                        
+                        </div>
+                    </form>            
+                
+            </div>
+            
+
+        </div>
+        <!----------------------------------------------------FUNCTION JAVASCRIPTS-----------------------------------------------------------------
+                                                THIS IS ALMOST CONSIST OF AJAX FUNCTIONS
+        ------------------------------------------------------------------------------------------------------------------------------------------>
+        
+        <script>                                    
+            function hide_show_params() {                               // Function to hide show searching parameters
+              var x = document.getElementById("hidden-div");
+              
+              if (x.style.display === "block") {                        // Block == show
+                x.style.display = "none";                               // none == hide
+              } else {
+                x.style.display = "block";
+              }
+            }
+            function hide_LED() {
+                
+                document.getElementById("led_red").style.display = "none";
+                document.getElementById("led_green").style.display = "none";
+            }
+        </script>
+
+        <script>
+            $("#Model").change(function () {
+                var url = $("#indexForm").attr("data-Line-url");        // get the url of the `load_line` view
+                var ModelId = $(this).val();                            // get the selected programming ID from the HTML input
+                var date_start = $("#date_start").val();
+                var time_start = $("#time-start").val();
+            
+                $.ajax({                                                // initialize an AJAX request
+                    url: url,                                           // set the url of the request (= localhost:8000/load-line/)
+                    data: {
+                        'time_start':time_start,
+                        "date_start":date_start,
+                        'ModelId': ModelId                              // add the programming id to the GET parameters
+                        
+                    },
+                    success: function (data) {                          // `data` is the return of the `load_line` view function
+                    
+                        var splitted = data.split("|");                 // RESULT
+                        $("#Line").html(splitted[0]);                   // html show dropdown list for line
+                        $("#rib_name").html(splitted[1]);               // html show dropdown list for RIb
+                
+                    }
+                });
+
+                });
+        </script>
+
+        <script>                                                         // Function to SHOW realtime data of graph
+
+            setInterval(realtime_graph, 120000);
+            function realtime_graph(){
+                //$("#realtime").change(function () {
+                if (document.getElementById('realtime').checked) {
+
+                    //var model = document.getElementsById("Modelname").value;
+                    var url = $("#indexForm").attr("ajax_load_realtime");
+                    //var time_start = document.getElementById("timenow");
+                    var model = $("#Modelname").text();
+                    var time_start = $("#timenow").text();
+                    
+                    document.getElementById("collapse1").style.display = "none";
+                    document.getElementById("collapse2").style.display = "none";
+                    document.getElementById("collapse3").style.display = "none";
+                    document.getElementById("collapse4").style.display = "none";
+                    document.getElementById("collapse10").style.display = "none";
+                    document.getElementById("collapse11").style.display = "none";
+                    document.getElementById("led_red").style.display = "block";
+                    document.getElementById("led_green").style.display = "none";
+
+                    
+                    $.ajax({
+                        url: url,
+                        data: {
+                            'model': model, 
+                            'time_start': time_start,
+                        },
+
+                        success: function (data) {
+                            $('#ribUpper_kmkc').html(data["ribUpper_kmkc"]); // realtime chart 
+                            $('#ribAori_kmkc').html(data["ribAori_kmkc"]);
+                            $('#ribUpper_adj').html(data["ribUpper_adj"]);
+                            $('#ribAori_adj').html(data["ribAori_adj"]);
+
+                            //$('#histo_rib1u_kmkc').html(data["histo_rib1u_kmkc"]);
+                            //$('#histo_rib2u_kmkc').html(data["histo_rib2u_kmkc"]);
+                            //$('#histo_rib3u_kmkc').html(data["histo_rib3u_kmkc"]);
+                            //$('#histo_rib4u_kmkc').html(data["histo_rib4u_kmkc"]);
+                            //$('#histo_rib5u_kmkc').html(data["histo_rib5u_kmkc"]);
+                            //$('#histo_rib6u_kmkc').html(data["histo_rib6u_kmkc"]);
+                            //$('#histo_rib7u_kmkc').html(data["histo_rib7u_kmkc"]);
+                            //$('#histo_rib8u_kmkc').html(data["histo_rib8u_kmkc"]);
+
+                            //$('#histo_rib1ul_kmkc').html(data["histo_rib1ul_kmkc"]);
+                            //$('#histo_rib2ul_kmkc').html(data["histo_rib2ul_kmkc"]);
+                            //$('#histo_rib3ul_kmkc').html(data["histo_rib3ul_kmkc"]);
+                            //$('#histo_rib4ul_kmkc').html(data["histo_rib4ul_kmkc"]);
+                            //$('#histo_rib5ul_kmkc').html(data["histo_rib5ul_kmkc"]);
+                            //$('#histo_rib6ul_kmkc').html(data["histo_rib6ul_kmkc"]);
+                            //$('#histo_rib7ul_kmkc').html(data["histo_rib7ul_kmkc"]);
+                            //$('#histo_rib8ul_kmkc').html(data["histo_rib8ul_kmkc"]);
+
+                            //$('#histo_rib2u_adj').html(data["histo_rib2u_adj"]);
+                            //$('#histo_rib7u_adj').html(data["histo_rib7u_adj"]);
+                            //$('#histo_rib2ul_adj').html(data["histo_rib2ul_adj"]);
+                            //$('#histo_rib7ul_adj').html(data["histo_rib7ul_adj"]);
+
+                            $('#differ_upper').html(data["differ_upper"]);
+                            $('#differ_aori').html(data["differ_aori"]);
+
+                            $('#realtime_start').html("From:  " + time_start);
+                            $('#realtime_end').html("To:  "+ data["time-end"])
+                            //$('#histo_rib2u_differ').html(data["histo_rib2u_differ"]);
+                            //$('#histo_rib7u_differ').html(data["histo_rib7u_differ"]);
+                            //$('#histo_rib2ul_differ').html(data["histo_rib2ul_differ"]);
+                            //$('#histo_rib7ul_differ').html(data["histo_rib7ul_differ"]);
+
+                            //alert(response);
+                            document.getElementById("led_red").style.display = "none";
+                            document.getElementById("led_green").style.display = "block";
+
+                        },
+                        error: function(rs, e) {
+                                                alert(rs.responseText); //throw actual error, just for debugging purpose
+                                                alert('Oops! something went worng..'); // alert user that something goes wrong
+                                            }
+                    });
+                    
+                } else {
+                    document.getElementById("led_red").style.display = "none";
+                    document.getElementById("led_green").style.display = "none";
+                    
+                }
+                
+                }; 
+        
+        </script>
+
+        <!-------------------------------------------------------------------------------------------------------------------
+                                                        MAIN FRONTEND
+        --------------------------------------------------------------------------------------------------------------------->
+        <br>
+        <table style = "width:100%; text-align: text-center;" id = "table_header">
+            <tr>
+                <th style="width:25%;" id = "Modelname" name = "Modelname">{{ Modelname }}</th>
+                <th style="width:25%;">Line: {{ line_show }}</th>
+                <th id = "realtime_start" name = "realtime_start" style="width:25%;"> From: {{ from }}</th>
+                <th id = "realtime_end" name = "realtime_end" style="width:25%;">To: {{ to }}</th>
+            </tr>
+            
+        </table>
+        <div class="row">
+            <div class="col-md-11"></div>
+            <div class="col-md-1">
+                <form method = 'POST'>
+                    {% csrf_token %}  
+                    <button class = "btn btn-link" id = "btn-download" name = "btn-download">Download CSV file</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-1"></div>
+            <div class="col-md-11">
+                <h4><b>Realtime graph</b></h4>
+                
+            </div>
+        </div>
+
+        <div class = "row" >    
+            <div class="col-md-1"></div>   
+
+            <div class="col-md-4">
+                <div id="wrapper">
+                    <div id = "realtime_btn">
+                        <input type="checkbox" class = "flipswitch" id="realtime" name="realtime_click" value="realtime" onclick = "realtime_graph()">
+
+                    </div>
+                    &nbsp;&nbsp;&nbsp;
+                    
+                    <div id = "led1" style = "margin-left: 80px">
+                        <div class="led_light" id = "led_red" name = "led_red" >
+                            <div class="led-box">
+                                <div class="led-red" ></div>
+                                <label for = "led_red">Loading....</label>
+                            </div>
+                        </div>
+                    </div>
+                    &nbsp;&nbsp;&nbsp;
+                    <div id = "led2" style ="margin-left:80px">
+                        <div class="led_light" id = "led_green" name = "led_green">
+                            <div class="led-box">
+                                <div class="led-green" ></div>
+                                <label for = "led_green">Done</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>   
+            <div class="col-md-6"></div>    
+            
+
+        </div>
+        <div class="row">
+            <div class="col-md-1"></div>
+            <div class="col-md-1">
+                <p>cycletime: 2 minutes</p>
+            </div>
+        </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body text-center" id="headingOne" style="background-color: antiquewhite;border: 2px solid">
+                            <h2 class = "card-title"><b>RIB UPPER</b></h2>
+                            
+                            <div class="container text-center text-white" style = "width:100%; height: 100%; background-color:teal;">
+                                <h3><b>KMK CONFIRM</b></h3>
+                            </div>
+                            <br>
+                            
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    {% autoescape off %}
+                                        {{ F36_ribUpper | safe }}
+                                    {% endautoescape %}
+                                </div>
+                            </div>
+                            <br><br>
+                            <h5 class="clearfix mb-0">
+                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne"> <!--function click label to show histo-->
+                                Collapse histogram charts <i class="fa fa-angle-down"></i>
+                                </button>
+                            </h5>
+                            <br>
+                            <div id="collapseOne" class="collapse show" aria-labelledby="headingOne">
+                                <div class="row">                                                   
+                                
+                                
+                                    <div class="col-md-4">
+                                        {% autoescape off %}
+                                                {{ F36_histo_rib2u | safe }}
+                                        {% endautoescape %} 
+                                    </div>
+                                    <div class="col-md-4">
+                                        {% autoescape off %}
+                                                {{ F36_histo_rib3u | safe }}                  
+                                            {% endautoescape %}
+                                    </div>                         
+                                    <div class="col-md-4">
+                                        {% autoescape off %}
+                                                {{ F36_histo_rib4u | safe }}                   
+                                            {% endautoescape %}  
+                                    </div>     
+                                                            
+                                </div>
+                                <br>
+                                <div class="row">
+                                
+                                    <div class="col-md-4">
+                                        {% autoescape off %}
+                                                {{ F36_histo_rib5u | safe }}
+                                        {% endautoescape %} 
+                                    </div>
+                                    <div class="col-md-4">
+                                        {% autoescape off %}
+                                                {{ F36_histo_rib6u | safe }}                  
+                                            {% endautoescape %}
+                                    </div>                         
+                                    <div class="col-md-4">
+                                        {% autoescape off %}
+                                                {{ F36_histo_rib7u | safe }}                   
+                                            {% endautoescape %}  
+                                    </div>                                       
+                                
+                                </div>
+                            </div>    
+                            <br><br>
+                            <div class="container text-center text-white" style = "width:100%; height: 100%; background-color:teal;">
+                                <h3><b>KMK ADJUST</b></h3>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    {% autoescape off %}
+                                        {{ ribUpper_adj | safe }}
+                                    {% endautoescape %}
+                                </div>
+                            </div>
+                            <br><br>
+                            <h5 class="clearfix mb-0">
+                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree"> <!--function click label to show histo-->
+                                Collapse histogram charts <i class="fa fa-angle-down"></i>
+                                </button>
+                            </h5>
+                            <br>
+                            <div id="collapseThree" class="collapse show" aria-labelledby="headingOne">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        {% autoescape off %}
+                                                {{ histo_rib2u_adj | safe }}
+                                        {% endautoescape %} 
+                                    </div>
+                                
+                                    <div class="col-md-4">
+                                        {% autoescape off %}
+                                                {{ histo_rib7u_adj | safe }}                  
+                                            {% endautoescape %}
+                                    </div>                        
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="col-md-6" style = "width:100%;">
+                    <div class="card">
+                        <div class="card-body text-center" style = "background-color:skyblue;border:2px solid">
+                            <h2 class = "card-title"><b>RIB AORI</b></h2>
+                            
+                            <div class="container text-center text-white" style = "width:100%; height: 100%; background-color:teal;">
+                                <h3><b>KMK CONFIRM</b></h3>
+                            </div>
+                            <br>
+                            
+                            <div class="row">
+                                <div class="col-md-12">
+                                    {% autoescape off %}
+                                        {{ F36_ribAori | safe }}
+                                    {% endautoescape %}
+                                </div>
+                            </div>
+                            <br><br>
+
+                            <h5 class="clearfix mb-0">
+                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"> <!--function click label to show histo-->
+                                Collapse histogram charts <i class="fa fa-angle-down"></i>
+                                </button>
+                            </h5>
+                            <br>
+                            <div id="collapseTwo" class="collapse show" aria-labelledby="headingOne">
+
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        {% autoescape off %}
+                                                {{ F36_histo_rib2ul | safe }}
+                                        {% endautoescape %} 
+                                    </div>
+                                    <div class="col-md-4">
+                                        {% autoescape off %}
+                                                {{ F36_histo_rib3ul | safe }}                  
+                                            {% endautoescape %}
+                                    </div>                         
+                                    <div class="col-md-4">
+                                        {% autoescape off %}
+                                                {{ F36_histo_rib4ul | safe }}                   
+                                            {% endautoescape %}  
+                                    </div>                                       
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        {% autoescape off %}
+                                                {{ F36_histo_rib5ul | safe }}
+                                        {% endautoescape %} 
+                                    </div>
+                                    <div class="col-md-4">
+                                        {% autoescape off %}
+                                                {{ F36_histo_rib6ul | safe }}                  
+                                            {% endautoescape %}
+                                    </div>                         
+                                    <div class="col-md-4">
+                                        {% autoescape off %}
+                                                {{ F36_histo_rib7ul | safe }}                   
+                                            {% endautoescape %}  
+                                    </div>                                       
+                                </div>
+                            </div>
+                            <br><br>
+                            <div class="container text-center text-white" style = "width:100%; height: 100%; background-color:teal;">
+                                <h3><b>KMK ADJUST</b></h3>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    {% autoescape off %}
+                                        {{ ribAori_adj | safe }}
+                                    {% endautoescape %}
+                                </div>
+                            </div>
+                            <br><br>
+                            <h5 class="clearfix mb-0">
+                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour"> <!--function click label to show histo-->
+                                Collapse histogram charts <i class="fa fa-angle-down"></i>
+                                </button>
+                            </h5>
+                            <br>
+                            <div id="collapseFour" class="collapse show" aria-labelledby="headingOne" >
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        {% autoescape off %}
+                                                {{ histo_rib2ul_adj | safe }}
+                                        {% endautoescape %} 
+                                    </div>
+                    
+                                    <div class="col-md-4">
+                                        {% autoescape off %}
+                                                {{ histo_rib7ul_adj | safe }}                  
+                                            {% endautoescape %}
+                                    </div>                        
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                </div>
+            </div>
+        
+    </body>

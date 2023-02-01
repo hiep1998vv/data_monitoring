@@ -1,0 +1,193 @@
+*{
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Helvetica Neue', sans-serif;
+  overflow: scroll;
+}
+
+section.hScroll {
+  height: 110vw;
+  width: 110vh;
+  padding: 20px;
+  background: #222;
+  overflow: hidden auto;
+  transform-origin: right top;
+  transform: rotate(-90deg) translateY(-110vh);
+}
+
+.hScroll_block {
+  width: calc(110vh - 40px);
+  height: calc(110vh - 40px);
+  background: white;
+  margin-bottom: 20px;
+  position: relative;
+  transform-origin: left top;
+  transform: rotate(90deg) translateY(calc(-110vh + 40px));
+}
+
+
+
+section.hScroll .hScroll_block .background {
+  position: absolute;
+  top: 0; bottom: 0; right: 0; left: 0;
+  background-size: cover;
+  background-position: center center;
+  background-blend-mode: luminosity;
+}
+
+.hScroll_block .letter {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 150px;
+  font-weight: bold;
+  color: white;
+}
+
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+
+
+
+.led_light {
+  background-size: cover;
+  padding: 0px;
+}
+
+.led-box {
+  height: 30px;
+  width: 25%;
+  margin: 0;
+  float: left;
+  
+}
+
+.led-box p {
+  font-size: 12px;
+  text-align: center;
+  margin: 0;
+}
+
+.led-red {
+  margin: 5px;
+  width: 24px;
+  height: 24px;
+  background-color: #F00;
+  border-radius: 50%;
+  box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #441313 0 -1px 9px, rgba(255, 0, 0, 0.5) 0 2px 12px;
+  -webkit-animation: blinkRed 0.5s infinite;
+  -moz-animation: blinkRed 0.5s infinite;
+  -ms-animation: blinkRed 0.5s infinite;
+  -o-animation: blinkRed 0.5s infinite;
+  animation: blinkRed 0.5s infinite;
+}
+
+@-webkit-keyframes blinkRed {
+    from { background-color: #F00; }
+    50% { background-color: #A00; box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #441313 0 -1px 9px, rgba(255, 0, 0, 0.5) 0 2px 0;}
+    to { background-color: #F00; }
+}
+@-moz-keyframes blinkRed {
+    from { background-color: #F00; }
+    50% { background-color: #A00; box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #441313 0 -1px 9px, rgba(255, 0, 0, 0.5) 0 2px 0;}
+    to { background-color: #F00; }
+}
+@-ms-keyframes blinkRed {
+    from { background-color: #F00; }
+    50% { background-color: #A00; box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #441313 0 -1px 9px, rgba(255, 0, 0, 0.5) 0 2px 0;}
+    to { background-color: #F00; }
+}
+@-o-keyframes blinkRed {
+    from { background-color: #F00; }
+    50% { background-color: #A00; box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #441313 0 -1px 9px, rgba(255, 0, 0, 0.5) 0 2px 0;}
+    to { background-color: #F00; }
+}
+@keyframes blinkRed {
+    from { background-color: #F00; }
+    50% { background-color: #A00; box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #441313 0 -1px 9px, rgba(255, 0, 0, 0.5) 0 2px 0;}
+    to { background-color: #F00; }
+}
+
+.led-green {
+  margin: 5px;
+  width: 24px;
+  height: 24px;
+  background-color: #ABFF00;
+  border-radius: 50%;
+  box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #304701 0 -1px 9px, #89FF00 0 2px 12px;
+}
+
+#wrapper {
+   
+}
+#led2 {
+    display: inline-block;
+    float: left;
+}
+#led1 {
+    display: inline-block;
+    float: left;
+}
+
+#realtime_btn {
+	padding: 0px;
+	display: inline-block;
+	float: left;
+	font-size: 14px;
+}
+
+#realtime_btn label{
+	font-size: 14px;
+}
+
+
+
+.flipswitch {
+  position: relative;
+  background: white;
+  width: 120px;
+  height: 40px;
+  -webkit-appearance: initial;
+  border-radius: 3px;
+  -webkit-tap-highlight-color: rgba(38, 255, 38, 1);
+  outline: none;
+  font-size: 14px;
+  font-family: Trebuchet, Arial, sans-serif;
+  font-weight: bold;
+  cursor: pointer;
+  border: 3px solid #ddd;
+}
+
+.flipswitch:after {
+  position: absolute;
+  top: 5%;
+  display: block;
+  line-height: 32px;
+  width: 45%;
+  height: 90%;
+  background: #fff;
+  box-sizing: border-box;
+  text-align: center;
+  transition: all 0.3s ease-in 0s;
+  color: black;
+  border: #888 1px solid;
+  border-radius: 3px;
+}
+
+.flipswitch:after {
+  left: 2%;
+  content: "OFF";
+  background: red;
+}
+
+.flipswitch:checked:after {
+  left: 53%;
+  content: "ON";
+  background: green;
+}

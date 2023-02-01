@@ -1,0 +1,322 @@
+<!DOCTYPE HTML>
+
+<html>
+    {% load static %}
+    <base href = "/">
+    <link rel="stylesheet" type="text/css" href="{% static 'OPR/css/hiep.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'OPR/css/bootstrap.min.css' %}" />
+    <head>
+        <title>OPR_WIT</title>
+    </head>
+    <body>
+        
+        <div class="container-fluid p-3 my-12 bg-dark text-white">
+            <div class="row text-center">
+                <div class="col-md-1"></div>
+                <div class="col-md-10 text-center">
+                    <h1>CHECKER DATA VISUALIZATION PANEL</h1>
+                </div>
+                <div class="col-md-1"></div>
+                
+            </div>
+            
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-10"></div>
+                    <div class="col-md-2">
+
+                        <div class="btn-group btn-group">
+                            <form action="{% url 'today' %}" method = 'GET'>
+                                {% csrf_token %}
+                                    <button class = 'btn btn-secondary'>Today</button>                                                       
+                            </form>
+                                     
+                            <button class = 'btn btn-primary'>This month</button>    
+                            
+                        </div>
+                    </div>  
+                </div>
+                    
+                </div>
+            </div>
+        </div>
+        
+        <section class="hScroll">
+
+            <!-----------------------------------------G29 DATA VISUALIZE------------------------------------------------------->
+            <div class="hScroll_block">
+                <div class="panel-body text-center" style="border: 1px solid gray">
+                    <h2>MODEL G29</h2>
+                </div>
+                <div class="panel-body text-center" style="border: 1px solid gray">
+                    <div class="container text-center bg-dark text-white">
+                        <h4>Checker Quality Ratio</h4>
+                    </div>
+                    <p>Last update time: {{ time_update }}</p>
+                    {% autoescape off %}
+                    
+                        {{ graph_bar_G29 | safe }}
+                        {{ graph_OPR_G29 | safe }}
+
+                    {% endautoescape %}
+                </div>
+                <br>
+                <div class="panel-body text-center" style="border: 1px solid gray">
+                    <div class="container text-center bg-dark text-white">
+                        <h4>Checker Worst Item</h4>
+                    </div>
+                    {% autoescape off %}
+            
+                        {{ graph_wit_G29 | safe }}
+       
+                    {% endautoescape %}
+                </div>
+              
+            </div>
+
+            <!-----------------------------------------G10 DATA VISUALIZE------------------------------------------------------->
+            <div class="hScroll_block">
+                <div class="panel-body text-center" style="border: 1px solid gray">
+                    <h2>MODEL G10</h2>
+                </div>
+                <div class="panel-body text-center" style="border: 1px solid gray">
+                    <div class="container text-center bg-dark text-white">
+                        <h4>Checker Quality Ratio</h4>
+                    </div>
+                    <p>Last update time: {{ time_update }}</p>
+                    {% autoescape off %}
+                    
+                        {{ graph_bar_G10 | safe }}
+                        {{ graph_OPR_G10 | safe }}
+
+                    {% endautoescape %}
+                </div>
+                <br>
+                <div class="panel-body text-center" style="border: 1px solid gray">
+                    <div class="container text-center bg-dark text-white">
+                        <h4>Checker Worst Item</h4>
+                    </div>
+                    {% autoescape off %}
+            
+                        {{ graph_wit_G10 | safe }}
+       
+                    {% endautoescape %}
+                </div>
+              
+            </div>
+
+            <!-----------------------------------------G12 DATA VISUALIZE------------------------------------------------------->
+            <div class="hScroll_block">
+                <div class="panel-body text-center" style="border: 1px solid gray">
+                    <h2>MODEL G12</h2>
+                </div>
+                <div class="panel-body text-center" style="border: 1px solid gray">
+                    <div class="container text-center bg-dark text-white">
+                        <h4>Checker Quality Ratio</h4>
+                    </div>
+                    <p>Last update time: {{ time_update }}</p>
+                    {% autoescape off %}
+                    
+                        {{ graph_bar_G12 | safe }}
+                        {{ graph_OPR_G12 | safe }}
+
+                    {% endautoescape %}
+                </div>
+                <br>
+                <div class="panel-body text-center" style="border: 1px solid gray">
+                    <div class="container text-center bg-dark text-white">
+                        <h4>Checker Worst Item</h4>
+                    </div>
+                    {% autoescape off %}
+            
+                        {{ graph_wit_G12 | safe }}
+       
+                    {% endautoescape %}
+                </div>
+              
+            </div>
+
+            <!-----------------------------------------G14 DATA VISUALIZE------------------------------------------------------->
+            <div class="hScroll_block">
+                <div class="panel-body text-center" style="border: 1px solid gray">
+                    <h2>MODEL G14</h2>
+                </div>
+                <div class="panel-body text-center" style="border: 1px solid gray">
+                    <div class="container text-center bg-dark text-white">
+                        <h4>Checker Quality Ratio</h4>
+                    </div>
+                    <p>Last update time: {{ time_update }}</p>
+                    {% autoescape off %}
+                    
+                        {{ graph_bar_G14 | safe }}
+                        {{ graph_OPR_G14 | safe }}
+
+                    {% endautoescape %}
+                </div>
+                <br>
+                <div class="panel-body text-center" style="border: 1px solid gray">
+                    <div class="container text-center bg-dark text-white">
+                        <h4>Checker Worst Item</h4>
+                    </div>
+                    {% autoescape off %}
+            
+                        {{ graph_wit_G14 | safe }}
+       
+                    {% endautoescape %}
+                </div>
+              
+            </div>
+
+            <!-----------------------------------------G15 DATA VISUALIZE------------------------------------------------------->
+            <div class="hScroll_block">
+                <div class="panel-body text-center" style="border: 1px solid gray">
+                    <h2>MODEL G15</h2>
+                </div>
+                <div class="panel-body text-center" style="border: 1px solid gray">
+                    <div class="container text-center bg-dark text-white">
+                        <h4>Checker Quality Ratio</h4>
+                    </div>
+                    <p>Last update time: {{ time_update }}</p>
+                    {% autoescape off %}
+                    
+                        {{ graph_bar_G15 | safe }}
+                        {{ graph_OPR_G15 | safe }}
+
+                    {% endautoescape %}
+                </div>
+                <br>
+                <div class="panel-body text-center" style="border: 1px solid gray">
+                    <div class="container text-center bg-dark text-white">
+                        <h4>Checker Worst Item</h4>
+                    </div>
+                    {% autoescape off %}
+            
+                        {{ graph_wit_G15 | safe }}
+       
+                    {% endautoescape %}
+                </div>
+              
+            </div>
+
+            <!-----------------------------------------F36 DATA VISUALIZE------------------------------------------------------->
+            <div class="hScroll_block">
+                <div class="panel-body text-center" style="border: 1px solid gray">
+                    <h2>MODEL F36</h2>
+                </div>
+                <div class="panel-body text-center" style="border: 1px solid gray">
+                    <div class="container text-center bg-dark text-white">
+                        <h4>Checker Quality Ratio</h4>
+                    </div>
+                    <p>Last update time: {{ time_update }}</p>
+                    {% autoescape off %}
+                        {{ graph_bar_F36 | safe }}
+                        {{ graph_OPR_F36 | safe }}
+                    {% endautoescape %}
+                </div>
+                <br>
+                <div class="panel-body text-center" style="border: 1px solid gray">
+                    <div class="container text-center bg-dark text-white">
+                        <h4>Checker Worst Item</h4>
+                    </div>
+                        {% autoescape off %}
+                            {{ graph_wit_F36 | safe }}
+                        {% endautoescape %}
+                </div>
+            </div>
+            
+            <!-----------------------------------------F37 DATA VISUALIZE------------------------------------------------------->
+            <div class="hScroll_block">
+                <div class="panel-body text-center" style="border: 1px solid gray">
+                    <h2>MODEL F37</h2>
+                </div>
+                <div class="panel-body text-center" style="border: 1px solid gray">
+                    <div class="container text-center bg-dark text-white">
+                        <h4>Checker Quality Ratio</h4>
+                    </div>
+                    <p>Last update time: {{ time_update }}</p>
+                    {% autoescape off %}
+
+                        {{ graph_bar_F37 | safe }}
+                        {{ graph_OPR_F37 | safe }}
+
+                    {% endautoescape %}
+                </div>
+                <br>
+                <div class="panel-body text-center" style="border: 1px solid gray">
+                    <div class="container text-center bg-dark text-white">
+                        <h4>Checker Worst Item</h4>
+                    </div>
+                    {% autoescape off %}
+
+                        {{ graph_wit_F37 | safe }}
+
+                    {% endautoescape %}
+                </div>
+            
+            </div>
+
+            <!-----------------------------------------F38 DATA VISUALIZE------------------------------------------------------->
+            <div class="hScroll_block">
+                <div class="panel-body text-center" style="border: 1px solid gray">
+                    <h2>MODEL F38</h2>
+                </div>
+                <div class="panel-body text-center" style="border: 1px solid gray">
+                    <div class="container text-center bg-dark text-white">
+                        <h4>Checker Quality Ratio</h4>
+                    </div>
+                    <p>Last update time: {{ time_update }}</p>
+                    {% autoescape off %}
+
+                        {{ graph_bar_F38 | safe }}
+                        {{ graph_OPR_F38 | safe }}
+
+                    {% endautoescape %}
+                </div>
+                <br>
+                <div class="panel-body text-center" style="border: 1px solid gray">
+                    <div class="container text-center bg-dark text-white">
+                        <h4>Checker Worst Item</h4>
+                    </div>
+                    {% autoescape off %}
+
+                        {{ graph_wit_F38 | safe }}
+
+                    {% endautoescape %}
+                </div>
+            </div>
+
+            <!-----------------------------------------F58 DATA VISUALIZE------------------------------------------------------->
+            <div class="hScroll_block">
+                <div class="panel-body text-center" style="border: 1px solid gray">
+                    <h2>MODEL F58</h2>
+                </div>
+                <div class="panel-body text-center" style="border: 1px solid gray">
+                    <div class="container text-center bg-dark text-white">
+                        <h4>Checker Quality Ratio</h4>
+                    </div>
+                    <p>Last update time: {{ time_update }}</p>
+                    {% autoescape off %}
+
+                        {{ graph_bar_F58 | safe }}
+                        {{ graph_OPR_F58 | safe }}
+
+                    {% endautoescape %}
+                </div>
+                <br>
+                <div class="panel-body text-center" style="border: 1px solid gray">
+                    <div class="container text-center bg-dark text-white">
+                        <h4>Checker Worst Item</h4>
+                    </div>
+                    {% autoescape off %}
+
+                        {{ graph_wit_F58 | safe }}
+
+                    {% endautoescape %}
+                </div>
+            </div>
+            
+            
+          </section>
+
+    </body>
+</html>

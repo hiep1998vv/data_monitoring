@@ -1,0 +1,9 @@
+<option value="">---select line---</option>
+{% for line in Line %}
+<option value="{{ line.Line }}">{{ line.Line }}</option>
+{% endfor %}
+|
+<option value="">---select rib---</option>
+{% for r in rib %}
+<option value = "{{ r }}">{{ r }}</option>
+{% endfor %}
